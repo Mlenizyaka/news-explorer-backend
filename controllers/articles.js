@@ -1,7 +1,8 @@
 const Article = require('../models/article');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
-const AuthorizationError = require('../errors/AuthorizationError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const messages = require('../utils/messages');
 
 // Возвращает список всех статей пользователя
 const getArticles = (req, res, next) => {
@@ -34,17 +35,17 @@ const createArticle = (req, res, next) => {
 
 // Удаляет сохранённую статью  по _id
 const deleteArticle = (req, res, next) => {
-  Article.findById(req.params.id)
+  Article.findById({ _id: req.params.id }).select('+owner')
     .then((article) => {
       if (!article) {
-        throw new NotFoundError('Статья с таким id не найдена');
+        throw new NotFoundError(messages.article.IdNotFound);
       }
-      if (article.owner._id.toString() === req.user._id) {
+      if (article.owner.equals(req.user._id)) {
         return Article.findByIdAndRemove(req.params.id)
-          .then((result) => res.status(200).send({ message: `Статья с id ${result._id} удалена` }))
+          .then(() => res.status(200).send({ message: messages.article.isDeleted }))
           .catch((err) => next(new BadRequestError(err.message)));
       }
-      throw new AuthorizationError('Необходимо авторизоваться чтобы удалить статью');
+      throw new ForbiddenError(messages.user.unauthorizedUser);
     })
     .catch(next);
 };

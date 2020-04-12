@@ -1,13 +1,8 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
 const { userCreate } = require('../controllers/users');
+const userCreateObj = require('../celebrate_validation_objects/userCreateObj');
 
-router.post('/', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), userCreate);
+router.post('/', celebrate(userCreateObj), userCreate);
 
 module.exports = router;
