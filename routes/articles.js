@@ -1,6 +1,9 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
 const auth = require('../middlewares/auth');
+
+const createArticleObj = require('../celebrate_validation_objects/createArticleObj');
+const articleIdObj = require('../celebrate_validation_objects/articleIdObj');
 
 const {
   getArticles,
@@ -12,20 +15,8 @@ router.use(auth);
 
 router.get('/', getArticles);
 
-router.post('/', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().uri(),
-    // добавить параметры в валидацию, перенести в отдельный файл
-  }),
-}), createArticle);
+router.post('/', celebrate(createArticleObj), createArticle);
 
-router.delete('/articleId', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().uri(),
-    // добавить параметры в валидацию, перенести в отдельный файл
-  }),
-}), deleteArticle);
+router.delete('/:id', celebrate(articleIdObj), deleteArticle);
 
 module.exports = router;

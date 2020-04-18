@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 const secretKey = require('../utils/secretKey');
+const AuthorizationError = require('../errors/AuthorizationError');
+const messages = require('../utils/messages');
 
 // Вход в систему (логин)
 const login = (req, res, next) => {
@@ -20,7 +22,7 @@ const login = (req, res, next) => {
 
       res.send({ token });
     })
-    .catch(next);
+    .catch(() => next(new AuthorizationError(messages.registration.wrongFields)));
 };
 
 module.exports = login;
