@@ -2,10 +2,11 @@ const { errors } = require('celebrate');
 const router = require('express').Router();
 
 const errorHandler = require('../middlewares/errorHandler');
-const middlewares = require('../middlewares/index');
+const middlewares = require('../middlewares');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
 const authorization = require('./authorization');
 const registration = require('./registration');
+const logout = require('./logout');
 const users = require('./users');
 const articles = require('./articles');
 const error = require('./error');
@@ -21,6 +22,7 @@ router.get('/crash-test', () => {
 
 router.use('/signin', authorization);
 router.use('/signup', registration);
+router.use('/logout', logout);
 router.use('/users', users);
 router.use('/articles', articles);
 router.use('*', error);

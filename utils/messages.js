@@ -6,6 +6,7 @@ const messages = {
     isNotFound: 'Такой пользователь не найден',
     alreadyExists: 'Такой пользователь уже существует',
     unauthorizedUser: 'Необходимо авторизоваться чтобы удалить статью',
+    loggedOut: 'Вы успешно вышли из системы',
   },
   article: {
     IdNotFound: 'Статья с таким id не найдена',

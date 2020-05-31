@@ -42,6 +42,14 @@ const userCreate = async (req, res, next) => {
     .catch(next);
 };
 
+const logout = (req, res, next) => {
+  res.clearCookie('jwt', {
+    httpOnly: true,
+  });
+
+  res.status(200).send({ status: '200', message: messages.user.loggedOut });
+};
+
 module.exports = {
-  getUserData, userCreate,
+  getUserData, userCreate, logout,
 };
